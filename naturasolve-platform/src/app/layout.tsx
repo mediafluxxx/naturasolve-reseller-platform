@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   description: "Professional drone systems and fleet services for scientific research, environmental monitoring, and specialized applications.",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={inter.variable}>

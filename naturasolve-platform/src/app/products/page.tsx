@@ -4,6 +4,7 @@ import { formatPrice } from "@/lib/utils"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ShoppingCart } from "lucide-react"
+import { Product, ProductCategory } from "@prisma/client"
 
 export default async function ProductsPage({
   searchParams,
@@ -13,7 +14,7 @@ export default async function ProductsPage({
   const products = await prisma.product.findMany({
     where: {
       isActive: true,
-      ...(searchParams.category && { category: searchParams.category.toUpperCase() }),
+      ...(searchParams.category && { category: searchParams.category.toUpperCase() as ProductCategory }),
     },
     orderBy: {
       createdAt: 'desc',
@@ -63,7 +64,7 @@ export default async function ProductsPage({
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
+          {products.map((product: Product) => (
             <Card key={product.id} className="flex flex-col">
               <CardHeader>
                 <div className="aspect-video bg-gray-100 rounded-md mb-4 flex items-center justify-center">

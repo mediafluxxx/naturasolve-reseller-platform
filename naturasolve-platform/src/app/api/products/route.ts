@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import { ProductCategory } from "@prisma/client"
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,7 +13,7 @@ export async function GET(request: NextRequest) {
     const products = await prisma.product.findMany({
       where: {
         isActive: true,
-        ...(category && { category: category.toUpperCase() }),
+        ...(category && { category: category.toUpperCase() as ProductCategory }),
         ...(featured && { isFeatured: true }),
       },
       orderBy: {
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session || session.user.role !== "ADMIN") {
+    if (!session || !session.user || session.user.role !== "ADMIN") {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
